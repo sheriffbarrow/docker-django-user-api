@@ -5,7 +5,7 @@ services:
     ports:
       - 8000:8000
     container_name: user-docker
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: sh -c "python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app-api
 
