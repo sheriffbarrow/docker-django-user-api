@@ -1,12 +1,33 @@
 services:
+  postgres-db:
+    image: postgres:10-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=user-api-db
+      - POSTGRES_USER=api-user
+      - POSTGRES_PASSWORD=superscretpassword
+    ports:
+      - 5432:5432
+
   app-api:
     build:
       context: .
     ports:
       - 8000:8000
     container_name: user-docker
-    command: sh -c "python3 manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app-api
+    environment:
+      - DB_HOST=postgres-db
+      - DB_NAME=user-api-db
+      - DB_USER=api-user
+      - DB_PASS=superscretpassword
+    depends_on:
+      - postgres-db
 
+volumes: 
+  postgres_data:
+  
 
